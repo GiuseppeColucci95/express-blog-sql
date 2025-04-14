@@ -1,5 +1,7 @@
+//import of mysql2
 const mysql = require('mysql2');
 
+//create object with credentials
 const credentials = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -8,12 +10,14 @@ const credentials = {
   port: process.env.DB_PORT
 }
 
-console.log(credentials);
+//creation of connection instance
 const connection = mysql.createConnection(credentials);
 
+//effective connection
 connection.connect((err) => {
   if (err) throw err;
   console.log("Connected to MySQL!");
 });
 
+//export connection
 module.exports = connection;
