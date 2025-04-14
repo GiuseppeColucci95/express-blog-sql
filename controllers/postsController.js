@@ -26,11 +26,26 @@ function show(req, res) {
 
   const sql = 'SELECT * FROM posts WHERE title = ?';
 
+  const sqlJoin =
+    `SELECT tags.*
+    FROM posts
+    JOIN post_tag ON post_tag.post_id = posts.id
+    JOIN tags ON post_tag.tag_id = tags.id
+    WHERE posts.title = ?`;
+
   connection.query(sql, [slugToUse], (err, results) => {
 
     if (err) return res.status(500).json({ error: 'Database query failed!' });
     if (results.length === 0) return res.status(404).json({ error: 'Post not found' });
-    res.json(results[0]);
+
+    const post = results[0];
+
+    connection.query(sqlJoin, [slugToUse], (err, tagsResults) => {
+      if (err) return res.status(500).json({ error: 'Database query failed!' });
+
+      post.tags = tagsResults;
+      res.json(post);
+    });
   });
 }
 
