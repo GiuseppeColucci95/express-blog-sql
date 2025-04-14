@@ -1,6 +1,9 @@
 //import posts from post.js
 const posts = require('../data/posts');
 
+const connection = require('../data/db');
+
+
 //index
 function index(req, res) {
 

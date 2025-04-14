@@ -8,6 +8,7 @@ const cors = require('cors');
 const port = 3000;
 
 
+
 //import posts router
 const postsRouter = require('./routers/postsRouter');
 
