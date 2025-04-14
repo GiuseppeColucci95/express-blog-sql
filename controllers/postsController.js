@@ -122,27 +122,16 @@ function modify(req, res) {
 //destroy
 function destroy(req, res) {
 
-  //get dynamic slug
-  const postSlug = req.params.slug;
-  //try to find post with given slug
-  const post = posts.find(post => post.slug === postSlug);
+  const slugToModify = req.params.slug.replaceAll("-", " ");
+  const slugToUse = slugToModify.charAt(0).toUpperCase() + slugToModify.slice(1);
 
-  //if post not found
-  if (!post) {
-    //error (bonus)
-    return res.status(404).json({
-      error: "404 Not Found",
-      message: "Post Not Found"
-    });
-  }
+  const sql = 'DELETE FROM posts WHERE title = ?';
 
-  //else remove the post
-  posts.splice(posts.indexOf(post), 1);
-  //print length in console to check the result
-  console.log(posts);
+  connection.query(sql, [slugToUse], (err) => {
 
-  //send 204 status
-  res.sendStatus(204);
+    if (err) return res.status(500).json({ error: 'Failed to delete post!' });
+    res.sendStatus(204);
+  });
 }
 
 //exports controller functions
