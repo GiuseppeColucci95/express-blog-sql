@@ -1,6 +1,7 @@
 //import posts from post.js
 const posts = require('../data/posts');
 
+//import connection with db
 const connection = require('../data/db');
 
 
