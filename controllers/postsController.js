@@ -20,22 +20,18 @@ function index(req, res) {
 
 //show
 function show(req, res) {
-  //get dynamic slug
-  const postSlug = req.params.slug;
 
-  //find interested post
-  const post = posts.find(post => post.slug === postSlug);
+  const slugToModify = req.params.slug.replaceAll("-", " ");
+  const slugToUse = slugToModify.charAt(0).toUpperCase() + slugToModify.slice(1);
 
-  //check if post got found
-  if (!post) {
-    //error (bonus)
-    return res.status(404).json({
-      error: "404 Not Found",
-      message: "Post not found"
-    });
-  }
+  const sql = 'SELECT * FROM posts WHERE title = ?';
 
-  res.json(post);
+  connection.query(sql, [slugToUse], (err, results) => {
+
+    if (err) return res.status(500).json({ error: 'Database query failed!' });
+    if (results.length === 0) return res.status(404).json({ error: 'Post not found' });
+    res.json(results[0]);
+  });
 }
 
 //store
