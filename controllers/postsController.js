@@ -4,27 +4,18 @@ const posts = require('../data/posts');
 //import connection with db
 const connection = require('../data/db');
 
-
 //index
 function index(req, res) {
 
-  //get query tag inserted
-  const queryTag = req.query.tag;
-  let filteredPosts = posts;
+  const sql = 'SELECT * FROM posts';
 
-  //check if tag exist
-  if (!queryTag) {
+  connection.query(sql, (err, results) => {
 
-    //return all posts
-    return res.json(filteredPosts);
-  }
+    if (err) return res.status(500).json({ error: 'Database query failed' });
+    res.json(results);
 
-  //else filter posts
-  filteredPosts = posts.filter(post => post.tags.includes(queryTag));
-
-  //return result
-  res.json(filteredPosts);
-
+    console.log(results);
+  });
 }
 
 //show
